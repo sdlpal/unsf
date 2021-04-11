@@ -1733,12 +1733,19 @@ static void convert_vibrato(SP_Meta *sp_meta, SF_Meta *sf_meta) {
         return;
     }
 
+#if 0
     /* cents to linear; 400cents = 256 */
     shift = (int) (pow(2.0, ((double) shift / 1200.0)) * VIBRATO_RATE_TUNING);
     if (shift < 0) shift = -shift;
     if (shift < 2) shift = 2;
     if (shift > 20) shift = 20; /* arbitrary */
     sp_meta->vibrato_depth = shift;
+#else
+	shift = shift * 256 / 400;
+	if (shift > 255) shift = 255;
+	else if (shift < -255) shift = -255;
+	sp_meta->vibrato_depth = shift;
+#endif
 
     /* frequency in mHz */
     if (!freq) freq = 8;
